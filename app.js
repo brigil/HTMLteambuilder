@@ -14,11 +14,11 @@ const idArray = [];
 
 function mainMenu() {
     function createManager() {
-        console.log("Let's build your team")
+        console.log("Please build your team")
         inquirer.prompt([{
             type: "input",
             name: "managerName",
-            message: "Enter your manager's name?",
+            message: "What is your manager's name?",
             validate: answer => {
                 if (answer !== "") {
                     return true;
@@ -29,7 +29,7 @@ function mainMenu() {
         {
             type: "input",
             name: "managerID",
-            message: "Enter your manager's ID?",
+            message: "What is your manager's ID?",
             validate: answer => {
                 if (parseInt(answer) > 0) {
                     idArray.push(answer)
@@ -58,7 +58,10 @@ function mainMenu() {
             message: "Enter your manager's office number?",
             validate: answer => {
                 
-                if (parseInt(answer) > 0) {
+                const pass = answer.match(
+                    /^[0-9]/
+                );
+                if (pass) {
                   return true;
                 }
                 return "Please enter a valid phone number";
@@ -91,7 +94,7 @@ function mainMenu() {
             type: "input",
             name: "engineerID",
             message: "Enter the engineer's ID?",
-            // verify ID has not already been used
+
             validate: answer => {
                 if (parseInt(answer) > 0) {
                      
@@ -151,9 +154,9 @@ function mainMenu() {
             type: "input",
             name: "internID",
             message: "Enter the intern's ID?",
-            // verify ID has not already been used
+            // ID has not already been used
             validate: answer => {
-                if (idArray.includes(answer) == false && parseInt(answer) > 0) {
+                if (parseInt(answer) > 0) {
                     idArray.push(answer)
                     return true;
                 }
@@ -206,31 +209,35 @@ function mainMenu() {
                 "I don't want to add anymore team memebers"]
         }
         ]).then(answers => {
-            if (answers.memberChoice === "Intern") {
-                createIntern();
-            } else if (answers.memberChoice === "Engineer") {
-                createEngineer();
-            } else {
-                createdTeam();
-            }
-            //function to create team.html
-            function createdTeam() {
-                //create an HTML file using the HTML render function
-                // pass in an array containing all employee objects
-                fs.writeFile(outputPath, renderHTML(teamMembers), "utf-8", (err) => {
-                    if (err) throw err;
-
-
-                })
+            switch (answers.memberType){
+            case "Engineer":
+                createEngineer(); 
+                break;
+            case "Intern":
+                createIntern(); 
+                break;
+            case "I don't want to add anymore team memebers":
+                renderHTML(); 
+                break;
             }
         })
-
-
     }
-
+//create output by passing in array of team members
+// check if folder exists & create if it doesnt
+    function renderHTML(){
+        if(!fs.existsSync("./output")){
+            fs.mkdirSync("./output")
+        }
+        fs.writeFile(outputPath, render(teamMembers) , (err)=>{
+        if (err) throw err;
+        console.log("The file was saved!");
+    })
+    }
 }
 
 mainMenu()
+
+
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 

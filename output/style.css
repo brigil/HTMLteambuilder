@@ -1,0 +1,18 @@
+
+body {
+    background: url("https://www.nawrb.com/wp-content/uploads/2013/08/bg-pattern1.png")
+}
+.team-heading, .card-header  {
+    background-color: #607b81;
+    color: white;
+}
+
+.text-center {
+    font-size: 60px;
+}
+.employee-card {
+    margin: 20px;
+    box-shadow: 0 0 10px 1px;
+    background-color: #82a5ad;
+
+}
